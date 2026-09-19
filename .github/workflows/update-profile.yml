@@ -1,5 +1,13 @@
 name: Update Profile
 
+# README.md là nguồn sự thật — sửa trực tiếp file đó.
+# Workflow này CHỈ làm mới dòng "Last updated", không ghi đè nội dung.
+#
+# (Bản cũ nhúng toàn bộ README vào một heredoc bên trong `run: |`. Cách đó vừa
+# làm YAML không parse được — nên Action ngừng chạy — vừa xoá sạch mọi chỉnh sửa
+# tay trên README mỗi ngày. Thêm nữa heredoc dùng << 'EOF' nên ${CURRENT_DATE}
+# bị ghi nguyên văn thay vì thay bằng ngày thật.)
+
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -13,239 +21,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Update README
+      - name: Refresh "Last updated" timestamp
         run: |
-          CURRENT_DATE=$(date +'%Y-%m-%d %H:%M:%S')
-
-          cat > README.md << 'EOF'
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=philliptran1402&label=Profile%20views&color=0e75b6&style=flat" />
-</p>
-
-<h1 align="center">Hi 👋, I'm Phi Tran</h1>
-<h3 align="center">Software Engineer | Web3 Builder | DeFi Infrastructure Developer</h3>
-
-<p align="center">
-Backend • Blockchain • Trading Systems • DevOps
-</p>
-
----
-
-# 🌍 About Me
-
-I'm a **Software Engineer with 6+ years of experience** building scalable backend systems and blockchain infrastructure.
-
-My focus is on **DeFi systems, smart contracts, and high-performance trading infrastructure**.
-
-I enjoy building:
-
-- ⚡ **DeFi protocols**
-- 🤖 **Trading & arbitrage bots**
-- 🔗 **Blockchain data pipelines**
-- 🧠 **High-performance backend architectures**
-
-Currently based in **Hanoi, Vietnam**.
-
----
-
-# 🚀 Current Focus
-
-🔭 Currently building:
-
-- **EVM Arbitrage Bots**
-- **DeFi Trading Infrastructure**
-- **Blockchain Event Indexers**
-- **Smart Contract Systems**
-
-🌱 Currently learning:
-
-- **Rust for high performance trading bots**
-- **Advanced DeFi protocol design**
-- **Distributed systems architecture**
-
----
-
-# ⚡ Web3 Interests
-
-- AMM architecture (Uniswap V2 / V3)
-- MEV & Arbitrage
-- Flash loans / Flash swaps
-- On-chain data indexing
-- Cross-chain infrastructure
-- DeFi trading systems
-
----
-
-# 🛠 Tech Stack
-
-## 💻 Programming Languages
-
-- JavaScript / TypeScript
-- Solidity
-- Rust
-- Golang
-- C#
-
-## ⚙️ Backend
-
-- Node.js
-- NestJS
-- ASP.NET Core
-- Gin
-- Rocket
-
-## 🔗 Blockchain
-
-- Solidity
-- Hardhat
-- EVM
-- Smart Contracts
-- DeFi protocols
-
-## 🗄 Databases
-
-- PostgreSQL
-- MySQL
-- MongoDB
-- Redis
-
-## ☁️ DevOps / Infrastructure
-
-- Docker
-- Kubernetes
-- AWS
-- Jenkins
-- GitLab CI/CD
-
-## 📊 Data & Messaging
-
-- Kafka
-- RabbitMQ
-- Elasticsearch
-- Logstash
-- Kibana
-- BigQuery
-
-## 🧰 Monitoring
-
-- Datadog
-- Sentry
-
----
-
-# 📈 GitHub Stats
-
-![GitHub Stats](https://github-readme-stats.vercel.app/api?username=philliptran1402&show_icons=true&theme=radical)
-
-![Top Languages](https://github-readme-stats.vercel.app/api/top-langs/?username=philliptran1402&layout=compact&theme=radical)
-
----
-
-# 🔥 GitHub Streak
-
-[![GitHub Streak](https://streak-stats.demolab.com?user=philliptran1402&theme=radical&hide_border=true)](https://git.io/streak-stats)
-
----
-
-# 📊 Contribution Graph
-
-![Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=philliptran1402&theme=react-dark)
-
----
-
-# 🚀 Featured Projects
-
-## 🔹 EVM Arbitrage Bot
-
-Automated arbitrage system for decentralized exchanges.
-
-Features:
-
-- Multi-DEX price scanning
-- Flashloan execution
-- Multi-hop routing
-- Private transaction submission
-- Risk management
-
-Tech stack:
-
-- Rust
-- Solidity
-- Redis
-- PostgreSQL
-
----
-
-## 🔹 Polymarket Market Maker Bot
-
-Automated trading bot for prediction markets.
-
-Features:
-
-- Inventory management
-- PnL tracking
-- Market making strategies
-- WebSocket price feeds
-
-Tech stack:
-
-- NodeJS
-- NestJS
-- WebSocket
-- PostgreSQL
-
----
-
-## 🔹 Blockchain Event Indexer
-
-High performance blockchain event processing pipeline.
-
-Features:
-
-- Real-time smart contract event processing
-- Event indexing
-- Data pipelines
-- Query APIs
-
-Tech stack:
-
-- NodeJS
-- Kafka
-- PostgreSQL
-- Redis
-
----
-
-# 🧠 Engineering Philosophy
-
-> Build systems that trade faster than humans think.
-
----
-
-# 📫 Contact
-
-📧 Email  
-phitranviet99@gmail.com
-
-💼 LinkedIn  
-https://linkedin.com/in/phitrantech
-
-🔗 GitHub  
-https://github.com/philliptran1402
-
----
-
-Last updated: ${CURRENT_DATE}
-
-⭐ If you find my work interesting, feel free to connect or collaborate!
-EOF
-
-      - name: Commit changes
+          CURRENT_DATE=$(TZ='Asia/Ho_Chi_Minh' date +'%Y-%m-%d %H:%M %Z')
+          if grep -q '^Last updated: ' README.md; then
+            sed -i "s/^Last updated: .*/Last updated: ${CURRENT_DATE}/" README.md
+          else
+            printf '\n---\n\nLast updated: %s\n' "$CURRENT_DATE" >> README.md
+          fi
+
+      - name: Commit if changed
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add README.md
-          git commit -m "Update profile README" || exit 0
+          git diff --staged --quiet && echo "Khong co thay doi" && exit 0
+          git commit -m "chore: refresh profile timestamp"
           git push
