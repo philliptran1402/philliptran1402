@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="https://komarev.com/ghpvc/?username=philliptran1402&label=Profile%20views&color=0e75b6&style=flat" />
+  <a href="https://github.com/philliptran1402">
+    <img src="https://wsrv.nl/?url=github.com/philliptran1402.png&w=400&h=400&fit=cover&mask=circle&maxage=7d" width="160" alt="Phillip Tran" />
+  </a>
 </p>
 
 <h1 align="center">Hi 👋, I'm Phi Tran</h1>
@@ -7,6 +9,13 @@
 
 <p align="center">
 Perp DEX • Lending • Options • RWA • On-chain Data • AI Agents
+</p>
+
+<p align="center">
+  <a href="https://linkedin.com/in/phitrantech"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
+  <a href="mailto:phitranviet99@gmail.com"><img src="https://img.shields.io/badge/Email-EA4335?style=flat&logo=gmail&logoColor=white" alt="Email" /></a>
+  <a href="https://github.com/philliptran1402"><img src="https://img.shields.io/badge/Da_Nang,_Vietnam-4A5568?style=flat&logo=googlemaps&logoColor=white" alt="Location" /></a>
+  <img src="https://komarev.com/ghpvc/?username=philliptran1402&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
 </p>
 
 ---
@@ -24,7 +33,7 @@ What I care about:
 - 🔗 **Reorg-safe data pipelines** — indexers, subgraphs, finality-aware settlement
 - 🧠 **Architecture over implementation** — the trade-off and its cost, not just the code
 
-Based in **Hanoi, Vietnam** · growing toward **technical leadership**.
+Based in **Da Nang, Vietnam** · growing toward **technical leadership**.
 
 ---
 
